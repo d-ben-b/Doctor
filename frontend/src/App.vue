@@ -1,8 +1,7 @@
 <!-- @format -->
 
-<script>
-  import HelloWorld from "./components/HelloWorld.vue";
-  import TheWelcome from "./components/TheWelcome.vue";
-</script>
+<script></script>
 
 <template></template>
+
+<style></style>
