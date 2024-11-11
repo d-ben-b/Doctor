@@ -36,7 +36,7 @@
       @click="toggleWrite"></personal-form>
 
     <!-- 寫新表單區域 -->
-    <write-new v-show="write" @submit="resetStates"></write-new>
+    <write-new v-show="write" @submit="toggleWrite"></write-new>
   </div>
 </template>
 
