@@ -2,7 +2,7 @@
 
 <template>
   <div class="navbar">
-    <img src="\OIP.jpg" alt="" v-show="login" />
+    <img src="\OIP.jpg" alt="" v-show="login" @click="resetStates" />
     <h2>專責醫師平台</h2>
     <button class="button remind" v-show="login">提醒</button>
     <button class="button logout" @click="toggleLogin" v-show="login">
