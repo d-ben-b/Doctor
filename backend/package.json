@@ -1,16 +1,20 @@
 {
-  "name": "backend",
+  "name": "my_project",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "json-server --watch db.json --port 3000"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "json-server": "^1.0.0-beta.3"
+    "bcryptjs": "^2.4.3",
+    "express": "^4.21.1",
+    "jsonwebtoken": "^9.0.2",
+    "moment": "^2.30.1",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.11.4"
   }
 }
