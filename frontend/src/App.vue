@@ -4,7 +4,6 @@
   <div id="app">
     <!-- Navbar 放在全局 -->
     <Navbar v-if="$route.name !== 'Login'" />
-    <!-- 單一 router-view -->
     <router-view />
   </div>
 </template>
