@@ -246,7 +246,7 @@
       const fetchHistoryRecords = async () => {
         try {
           const response = await axios.get(
-            `http://127.0.0.1:5000/history?task=${taskTitle.value}`,
+            `https://doctor-1-kpce.onrender.com/history?task=${taskTitle.value}`,
             {
               headers: {
                 Authorization: localStorage.getItem("token"), // 確保 token 正確存儲並傳遞
@@ -261,12 +261,15 @@
 
       const handleFormSubmission = async () => {
         try {
-          const response = await axios.post("http://127.0.0.1:5000/history", {
-            ...formData.value,
-            task: taskTitle.value,
-            category: category.value,
-            timestamp: new Date().toISOString(),
-          });
+          const response = await axios.post(
+            "https://doctor-1-kpce.onrender.com/history",
+            {
+              ...formData.value,
+              task: taskTitle.value,
+              category: category.value,
+              timestamp: new Date().toISOString(),
+            }
+          );
           historyRecords.value.push(response.data);
           alert("表單提交成功！");
         } catch (error) {

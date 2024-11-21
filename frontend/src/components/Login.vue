@@ -59,10 +59,13 @@
         }
 
         try {
-          const response = await axios.post("http://127.0.0.1:5000/login", {
-            username: this.username,
-            password: this.password,
-          });
+          const response = await axios.post(
+            "https://doctor-1-kpce.onrender.com/login",
+            {
+              username: this.username,
+              password: this.password,
+            }
+          );
 
           if (response.data.token) {
             console.log("登入成功", response.data);
@@ -84,7 +87,7 @@
       async fetchAnnouncementList() {
         try {
           const response = await axios.get(
-            "http://127.0.0.1:5000/announcementList"
+            "https://doctor-1-kpce.onrender.com/announcementList"
           );
           this.announcementList = response.data;
         } catch (error) {

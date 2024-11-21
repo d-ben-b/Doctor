@@ -49,7 +49,9 @@
       async fetchCategories() {
         // 模擬從 API 加載數據
         try {
-          const response = await axios.get("http://127.0.0.1:5000/categories");
+          const response = await axios.get(
+            "https://doctor-1-kpce.onrender.com/categories"
+          );
           this.categories = response.data;
         } catch (error) {
           console.error("加載分類數據失敗", error);
