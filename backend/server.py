@@ -326,6 +326,59 @@ def get_announcement_list():
         return jsonify({"message": f"Error: {e}"}), 500
 
 
+@app.route('/history', methods=['POST'])
+def add_history_record():
+    try:
+        # 從請求中獲取 JSON 資料
+        data = request.json
+
+        # 驗證必填欄位是否存在
+        required_fields = [
+            "id", "caseNumber", "reportDate", "reportDoctor", "hospital",
+            "startDate", "endDate", "childName", "childID", "noID",
+            "gender", "city", "birthDate", "phone", "address",
+            "fatherName", "fatherID", "fatherDescription", "motherName",
+            "motherID", "motherDescription", "nationality", "nationalityDescription",
+            "healthDescription", "caseSource", "caseSourceDescription", "task", "category", "timestamp"
+        ]
+        for field in required_fields:
+            if field not in data:
+                return jsonify({"message": f"Missing field: {field}"}), 400
+
+        # 連接 SQLite 資料庫
+        connection = sqlite3.connect("app.db")
+        cursor = connection.cursor()
+
+        # 插入資料到 history 資料表
+        cursor.execute('''
+            INSERT INTO history (
+                id, caseNumber, reportDate, reportDoctor, hospital,
+                startDate, endDate, childName, childID, noID,
+                gender, city, birthDate, phone, address,
+                fatherName, fatherID, fatherDescription, motherName,
+                motherID, motherDescription, nationality, nationalityDescription,
+                healthDescription, caseSource, caseSourceDescription, task, category, timestamp
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (
+            data["id"], data["caseNumber"], data["reportDate"], data["reportDoctor"], data["hospital"],
+            data["startDate"], data["endDate"], data["childName"], data["childID"], int(
+                data["noID"]),
+            data["gender"], data["city"], data["birthDate"], data["phone"], data["address"],
+            data["fatherName"], data["fatherID"], data["fatherDescription"], data["motherName"],
+            data["motherID"], data["motherDescription"], data["nationality"], data["nationalityDescription"],
+            data["healthDescription"], data["caseSource"], data["caseSourceDescription"], data["task"], data["category"], data["timestamp"]
+        ))
+
+        # 提交更改並關閉資料庫連接
+        connection.commit()
+        connection.close()
+
+        # 回應成功訊息
+        return jsonify({"message": "Record added successfully", "data": data}), 201
+
+    except Exception as e:
+        return jsonify({"message": f"Error: {e}"}), 500
+
 # 主程式啟動
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))

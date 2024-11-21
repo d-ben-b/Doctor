@@ -258,23 +258,60 @@
           console.error("無法加載歷史記錄", error);
         }
       };
+      const generateUUID = () => {
+        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+          /[xy]/g,
+          function (c) {
+            const r = (Math.random() * 16) | 0,
+              v = c === "x" ? r : (r & 0x3) | 0x8;
+            return v.toString(16);
+          }
+        );
+      };
 
       const handleFormSubmission = async () => {
         try {
+          console.log("Submitting formData:", formData.value); // 確認傳遞的資料
           const response = await axios.post(
             "https://doctor-1-kpce.onrender.com/history",
             {
-              ...formData.value,
+              id: formData.value.id || generateUUID(),
+              caseNumber: formData.value.caseNumber,
+              reportDate: formData.value.reportDate,
+              reportDoctor: formData.value.reportDoctor,
+              hospital: formData.value.hospital,
+              startDate: formData.value.startDate,
+              endDate: formData.value.endDate,
+              childName: formData.value.childName,
+              childID: formData.value.childID,
+              noID: formData.value.noID,
+              gender: formData.value.gender,
+              city: formData.value.city,
+              birthDate: formData.value.birthDate,
+              phone: formData.value.phone,
+              address: formData.value.address,
+              fatherName: formData.value.fatherName,
+              fatherID: formData.value.fatherID,
+              fatherDescription: formData.value.fatherDescription,
+              motherName: formData.value.motherName,
+              motherID: formData.value.motherID,
+              motherDescription: formData.value.motherDescription,
+              nationality: formData.value.nationality,
+              nationalityDescription: formData.value.nationalityDescription,
+              healthDescription: formData.value.healthDescription,
+              caseSource: formData.value.caseSource,
+              caseSourceDescription: formData.value.caseSourceDescription,
               task: taskTitle.value,
               category: category.value,
               timestamp: new Date().toISOString(),
             }
           );
-          historyRecords.value.push(response.data);
-          alert("表單提交成功！");
+          console.log("Response:", response.data);
         } catch (error) {
-          console.error("提交表單失敗", error);
-          alert("表單提交失敗，請稍後重試！");
+          console.error(
+            "Form submission failed:",
+            error.response?.data || error.message
+          );
         }
       };
 
