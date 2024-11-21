@@ -187,6 +187,7 @@
   export default {
     name: "TaskDetails",
     setup() {
+      const router = useRouter();
       const currentRoute = useRoute();
       const category = ref(currentRoute.query.category || "未知分類");
       const taskTitle = ref(currentRoute.query.task || "未知任務");
@@ -308,7 +309,7 @@
           );
           console.log("Response:", response.data);
           alert("表單提交成功！");
-          this.$router.push("/dashboard"); // 確保導航路徑正確
+          router.push("/dashboard"); // 確保導航路徑正確
         } catch (error) {
           console.error(
             "Form submission failed:",
