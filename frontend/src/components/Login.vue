@@ -59,26 +59,32 @@
         }
 
         try {
-          const response = await axios.get("http://localhost:3000/login");
-          const user = response.data.find(
-            (u) => u.username === this.username && u.password === this.password
-          );
+          const response = await axios.post("http://127.0.0.1:5000/login", {
+            username: this.username,
+            password: this.password,
+          });
 
-          if (user) {
-            console.log("登入成功", user);
+          if (response.data.token) {
+            console.log("登入成功", response.data);
+            // 儲存 token，供後續 API 調用使用
+            localStorage.setItem("token", response.data.token);
             this.$router.push("/dashboard");
           } else {
             this.errorMessage = "登入失敗，請確認帳號密碼";
           }
         } catch (error) {
           console.error("登入失敗", error);
-          this.errorMessage = "伺服器錯誤，請稍後再試";
+          if (error.response && error.response.status === 401) {
+            this.errorMessage = "帳號或密碼錯誤";
+          } else {
+            this.errorMessage = "伺服器錯誤，請稍後再試";
+          }
         }
       },
       async fetchAnnouncementList() {
         try {
           const response = await axios.get(
-            "http://localhost:3000/announcementList"
+            "http://127.0.0.1:5000/announcementList"
           );
           this.announcementList = response.data;
         } catch (error) {

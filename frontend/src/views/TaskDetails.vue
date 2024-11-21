@@ -246,7 +246,12 @@
       const fetchHistoryRecords = async () => {
         try {
           const response = await axios.get(
-            `http://localhost:3000/history?task=${taskTitle.value}`
+            `http://127.0.0.1:5000/history?task=${taskTitle.value}`,
+            {
+              headers: {
+                Authorization: localStorage.getItem("token"), // 確保 token 正確存儲並傳遞
+              },
+            }
           );
           historyRecords.value = response.data || [];
         } catch (error) {
@@ -256,7 +261,7 @@
 
       const handleFormSubmission = async () => {
         try {
-          const response = await axios.post("http://localhost:3000/history", {
+          const response = await axios.post("http://127.0.0.1:5000/history", {
             ...formData.value,
             task: taskTitle.value,
             category: category.value,
