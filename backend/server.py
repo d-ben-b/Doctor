@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import sqlite3
 import json
+import os
 
 # 創建 Flask 應用程式
 app = Flask(__name__)
@@ -327,4 +328,5 @@ def get_announcement_list():
 
 # 主程式啟動
 if __name__ == '__main__':
-    app.run(debug=False)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
