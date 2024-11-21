@@ -182,13 +182,14 @@
 <script>
   import { ref, onMounted } from "vue";
   import { useRoute } from "vue-router";
+  import useNavigation from "@/composables/useNavigation";
   import axios from "axios";
 
   export default {
     name: "TaskDetails",
     setup() {
-      const router = useRouter();
       const currentRoute = useRoute();
+      const { navigateTo } = useNavigation();
       const category = ref(currentRoute.query.category || "未知分類");
       const taskTitle = ref(currentRoute.query.task || "未知任務");
 
@@ -247,14 +248,18 @@
       const fetchHistoryRecords = async () => {
         try {
           const response = await axios.get(
-            `https://doctor-1-kpce.onrender.com/history?task=${taskTitle.value}`,
+            `https://doctor-1-kpce.onrender.com/history`, // 不需要 task 過濾參數
             {
               headers: {
-                Authorization: localStorage.getItem("token"), // 確保 token 正確存儲並傳遞
+                Authorization: localStorage.getItem("token"),
               },
             }
           );
-          historyRecords.value = response.data || [];
+
+          // 過濾歷史記錄只顯示與當前 taskTitle 相符的數據
+          historyRecords.value = (response.data || []).filter(
+            (record) => record.task === taskTitle.value
+          );
         } catch (error) {
           console.error("無法加載歷史記錄", error);
         }
@@ -307,9 +312,13 @@
               timestamp: new Date().toISOString(),
             }
           );
-          console.log("Response:", response.data);
-          alert("表單提交成功！");
-          router.push("/dashboard"); // 確保導航路徑正確
+          if (response.status === 201) {
+            alert("表單提交成功！");
+            navigateTo("/dashboard");
+          } else {
+            console.error("Unexpected response:", response);
+            alert("表單提交失敗，後端未返回預期結果！");
+          }
         } catch (error) {
           console.error(
             "Form submission failed:",
