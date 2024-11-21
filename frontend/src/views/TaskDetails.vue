@@ -273,7 +273,7 @@
         try {
           console.log("Submitting formData:", formData.value); // 確認傳遞的資料
           const response = await axios.post(
-            "http://172.20.10.14:5000/history",
+            "https://doctor-1-kpce.onrender.com/history",
             {
               id: formData.value.id || generateUUID(),
               caseNumber: formData.value.caseNumber,
