@@ -13,6 +13,7 @@
 
 <script>
   import { useRouter } from "vue-router";
+  import { useAuthStore } from "@/store/auth";
 
   export default {
     name: "Navbar",
@@ -23,21 +24,21 @@
     },
     setup() {
       const router = useRouter();
+      const authStore = useAuthStore();
 
-      // 登出時重置狀態並跳轉至登入頁面
       const logout = () => {
-        // 假設清除登入狀態的方法
-        router.push("/login"); // 跳轉到登入頁面
+        authStore.logout(); // 呼叫全域登出
+        router.push("/login"); // 跳轉至登入頁面
       };
 
-      // 重置狀態回到初始視圖
       const resetStates = () => {
-        router.push("/dashboard"); // 假設重置後回到 Dashboard
+        router.push("/dashboard"); // 跳轉至 Dashboard
       };
 
       return {
         logout,
         resetStates,
+        authStore,
       };
     },
   };

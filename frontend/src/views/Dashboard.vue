@@ -49,7 +49,9 @@
       async fetchCategories() {
         // 模擬從 API 加載數據
         try {
-          const response = await axios.get("http://localhost:3000/categories");
+          const response = await axios.get(
+            "http://localhost:3000/api/categories"
+          );
           this.categories = response.data;
         } catch (error) {
           console.error("加載分類數據失敗", error);

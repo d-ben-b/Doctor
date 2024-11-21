@@ -17,9 +17,34 @@
       "username": "C",
       "password": "123",
       "token": "ghi789"
+    },
+    {
+      "id": "3c78",
+      "username": "A",
+      "password": "123"
+    },
+    {
+      "id": "a59f",
+      "username": "A",
+      "password": "123"
+    },
+    {
+      "id": "63c2",
+      "username": "A",
+      "password": "123"
+    },
+    {
+      "id": "2214",
+      "username": "A",
+      "password": "123"
+    },
+    {
+      "id": "9011",
+      "username": "A",
+      "password": "123"
     }
   ],
-  "announcementList": [
+  "announcements": [
     {
       "work_place": "衛生局",
       "work_names": [

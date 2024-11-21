@@ -59,14 +59,16 @@
         }
 
         try {
-          const response = await axios.get("http://localhost:3000/login");
-          const user = response.data.find(
-            (u) => u.username === this.username && u.password === this.password
-          );
+          // 改為 POST 請求，並傳遞使用者名稱與密碼
+          const response = await axios.post("http://localhost:3000/login", {
+            username: this.username,
+            password: this.password,
+          });
 
-          if (user) {
-            console.log("登入成功", user);
-            this.$router.push("/dashboard");
+          // 檢查回應中的 Token
+          if (response.data.token) {
+            console.log("登入成功", response.data.user);
+            this.$router.push("/dashboard"); // 導向到 dashboard
           } else {
             this.errorMessage = "登入失敗，請確認帳號密碼";
           }
@@ -78,7 +80,7 @@
       async fetchAnnouncementList() {
         try {
           const response = await axios.get(
-            "http://localhost:3000/announcementList"
+            "http://localhost:3000/announcements"
           );
           this.announcementList = response.data;
         } catch (error) {
