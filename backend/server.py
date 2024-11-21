@@ -327,4 +327,4 @@ def get_announcement_list():
 
 # 主程式啟動
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
