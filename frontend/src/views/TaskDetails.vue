@@ -273,7 +273,7 @@
         try {
           console.log("Submitting formData:", formData.value); // 確認傳遞的資料
           const response = await axios.post(
-            "https://doctor-1-kpce.onrender.com/history",
+            "http://172.20.10.14:5000/history",
             {
               id: formData.value.id || generateUUID(),
               caseNumber: formData.value.caseNumber,
@@ -307,11 +307,14 @@
             }
           );
           console.log("Response:", response.data);
+          alert("表單提交成功！");
+          this.$router.push("/dashboard"); // 確保導航路徑正確
         } catch (error) {
           console.error(
             "Form submission failed:",
             error.response?.data || error.message
           );
+          alert("表單提交失敗，請稍後再試！");
         }
       };
 
