@@ -2,11 +2,8 @@
 
 <template>
   <div class="task-details">
-    <!-- 顯示當前任務和分類 -->
-    <h1>{{ taskTitle }}</h1>
-    <h2>分類: {{ category }}</h2>
+    <h1>填寫新表單</h1>
 
-    <!-- 填寫新表單 -->
     <div class="form-section">
       <h3>填寫新表單</h3>
       <form @submit.prevent="handleFormSubmission">
@@ -18,23 +15,18 @@
             <input v-model="formData.caseNumber" type="text" required />
           </label>
           <label>
-            填報日期:
+            轉介日期:
             <input v-model="formData.reportDate" type="date" required />
           </label>
           <label>
-            填報醫師:
-            <input v-model="formData.reportDoctor" type="text" required />
+            填表人姓名:
+            <input v-model="formData.reportName" type="text" required />
           </label>
           <label>
-            收案院別:
-            <select v-model="formData.hospital" required>
-              <option disabled value="">請選擇院別</option>
-              <option
-                v-for="hospital in hospitalOptions"
-                :key="hospital"
-                :value="hospital">
-                {{ hospital }}
-              </option>
+            填表人單位：
+            <select v-model="formData.reportPlace" required>
+              <option value="1">衛生局</option>
+              <option value="2">社會局</option>
             </select>
           </label>
           <label>
@@ -70,15 +62,6 @@
             </select>
           </label>
           <label>
-            縣市:
-            <select v-model="formData.city" required>
-              <option disabled value="">請選擇縣市</option>
-              <option v-for="city in cityOptions" :key="city" :value="city">
-                {{ city }}
-              </option>
-            </select>
-          </label>
-          <label>
             出生日期:
             <input v-model="formData.birthDate" type="date" required />
           </label>
@@ -86,259 +69,149 @@
 
         <!-- 家長資料 -->
         <div class="form-section">
-          <h3>家長資料</h3>
-          <!-- 父親資料 -->
+          <h3>聯絡人資料</h3>
           <div class="parent-section">
-            <h4>父親資料</h4>
             <label>
-              父親姓名:
-              <input v-model="formData.fatherName" type="text" required />
+              聯絡人姓名:
+              <input v-model="formData.parentName" type="text" required />
             </label>
             <label>
-              父親身分證號:
-              <input v-model="formData.fatherID" type="text" />
+              聯絡人電話:
+              <input v-model="formData.parentPhone" type="text" required />
             </label>
             <label>
-              特殊說明:
-              <textarea v-model="formData.fatherDescription"></textarea>
-            </label>
-          </div>
-          <!-- 母親資料 -->
-          <div class="parent-section">
-            <h4>母親資料</h4>
-            <label>
-              母親姓名:
-              <input v-model="formData.motherName" type="text" required />
+              聯絡人身分證號:
+              <input v-model="formData.parentID" type="text" />
             </label>
             <label>
-              母親身分證號:
-              <input v-model="formData.motherID" type="text" />
-            </label>
-            <label>
-              特殊說明:
-              <textarea v-model="formData.motherDescription"></textarea>
+              聯絡人關係:
+              <textarea v-model="formData.parentDescription"></textarea>
             </label>
           </div>
         </div>
 
-        <!-- 健康與個案來源 -->
+        <!-- 社工資料 -->
         <div class="form-section">
-          <h3>健康與個案來源</h3>
+          <h3>社工資料</h3>
           <label>
-            國籍:
-            <select v-model="formData.nationality" required>
-              <option value="1">本國籍</option>
-              <option value="2">非本國籍</option>
+            社工姓名:
+            <input v-model="formData.socialWorkerName" type="text" required />
+          </label>
+          <label>
+            社工單位:
+            <select v-model="formData.socialWorkerUnit" required>
+              <option value="1">衛生局</option>
+              <option value="2">社會局</option>
             </select>
           </label>
-          <label v-if="formData.nationality === '2'">
-            非本國籍說明:
-            <textarea v-model="formData.nationalityDescription"></textarea>
-          </label>
           <label>
-            幼兒醫療史或健康相關說明:
-            <textarea v-model="formData.healthDescription"></textarea>
-          </label>
-          <label>
-            個案來源:
-            <select v-model="formData.caseSource" required>
-              <option value="2">周產期高風險追蹤關懷計畫</option>
-              <option value="3">其他中央主管機關指定收案</option>
-              <option value="4">地方衛生局指定收案</option>
-            </select>
-          </label>
-          <label
-            v-if="formData.caseSource === '3' || formData.caseSource === '4'">
-            個案來源說明:
-            <textarea v-model="formData.caseSourceDescription"></textarea>
+            社工電話:
+            <input v-model="formData.socialWorkerPhone" type="text" required />
           </label>
         </div>
-
+        <label>
+          收案項目:
+          <select v-model="formData.caseTask" required>
+            <option disabled value="">請選擇收案項目</option>
+            <option v-for="task in taskOptions" :key="task" :value="task">
+              {{ task }}
+            </option>
+          </select>
+        </label>
         <!-- 提交按鈕 -->
         <button type="submit">提交表單</button>
       </form>
-    </div>
-
-    <!-- 歷史記錄 -->
-    <div class="history-section">
-      <h3>歷史記錄</h3>
-      <ul class="history-list">
-        <li
-          class="history-item"
-          v-for="(record, index) in historyRecords"
-          :key="index">
-          <p><strong>任務:</strong> {{ record.task }}</p>
-          <p><strong>分類:</strong> {{ record.category }}</p>
-          <p><strong>案件編號:</strong> {{ record.caseNumber }}</p>
-          <p><strong>填報醫師:</strong> {{ record.reportDoctor }}</p>
-          <p><strong>健康狀況:</strong> {{ record.healthDescription }}</p>
-          <p><strong>時間:</strong> {{ formatTimestamp(record.timestamp) }}</p>
-        </li>
-      </ul>
     </div>
   </div>
 </template>
 
 <script>
-  import { ref, onMounted } from "vue";
-  import { useRoute } from "vue-router";
-  import useNavigation from "@/composables/useNavigation";
-  import axios from "axios";
+  import { ref } from "vue";
+  import { ReadAPI } from "@/composables/useNavigation";
 
   export default {
     name: "TaskDetails",
     setup() {
-      const currentRoute = useRoute();
-      const { navigateTo } = useNavigation();
-      const category = ref(currentRoute.query.category || "未知分類");
-      const taskTitle = ref(currentRoute.query.task || "未知任務");
-
       const formData = ref({
         caseNumber: "",
         reportDate: "",
-        reportDoctor: "",
-        hospital: "",
+        reportName: "",
+        reportPlace: "",
         startDate: "",
         endDate: "",
         childName: "",
         childID: "",
         noID: false,
         gender: "",
-        city: "",
         birthDate: "",
-        phone: "",
-        address: "",
-        fatherName: "",
-        fatherID: "",
-        fatherDescription: "",
-        motherName: "",
-        motherID: "",
-        motherDescription: "",
-        nationality: "",
-        nationalityDescription: "",
-        healthDescription: "",
-        caseSource: "",
-        caseSourceDescription: "",
+        parentName: "",
+        parentID: "",
+        parentDescription: "",
+        parentPhone: "",
+        socialWorkerName: "",
+        socialWorkerUnit: "",
+        socialWorkerPhone: "",
+        caseTask: "",
       });
-
-      const historyRecords = ref([]);
-
-      const hospitalOptions = ref(["醫院A", "醫院B", "醫院C", "醫院D"]);
-      const cityOptions = ref([
-        "臺北市",
-        "新北市",
-        "桃園市",
-        "臺中市",
-        "高雄市",
+      const taskOptions = ref([
+        "逾期未接種預防針",
+        "B肝高風險",
+        "高風險孕產婦",
+        "未成年等風險因子孕產婦",
+        "新生兒代謝異常個案",
+        "低出生體重",
+        "早產兒",
+        "非法/成癮物質使用者父母",
+        "發展遲緩/早期療育需求",
+        "領有身心障礙證明者",
+        "中低、低收入戶",
+        "脆弱家庭",
+        "社會局處轉介",
       ]);
 
-      const formatTimestamp = (timestamp) => {
-        if (!timestamp) return "未知時間";
-        const formattedDate = new Date(timestamp);
-        return formattedDate.toLocaleString("zh-TW", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-        });
-      };
-
-      const fetchHistoryRecords = async () => {
-        try {
-          const response = await axios.get(
-            `https://doctor-1-kpce.onrender.com/history`, // 不需要 task 過濾參數
-            {
-              headers: {
-                Authorization: localStorage.getItem("token"),
-              },
-            }
-          );
-
-          // 過濾歷史記錄只顯示與當前 taskTitle 相符的數據
-          historyRecords.value = (response.data || []).filter(
-            (record) => record.task === taskTitle.value
-          );
-        } catch (error) {
-          console.error("無法加載歷史記錄", error);
-        }
-      };
-      const generateUUID = () => {
-        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-          /[xy]/g,
-          function (c) {
-            const r = (Math.random() * 16) | 0,
-              v = c === "x" ? r : (r & 0x3) | 0x8;
-            return v.toString(16);
-          }
-        );
-      };
-
       const handleFormSubmission = async () => {
+        const formDataToSend = {
+          caseNumber: formData.value.caseNumber,
+          reportDate: formData.value.reportDate,
+          reportName: formData.value.reportName,
+          reportPlace: formData.value.reportPlace,
+          startDate: formData.value.startDate,
+          endDate: formData.value.endDate,
+          childName: formData.value.childName,
+          childID: formData.value.childID,
+          noID: formData.value.noID,
+          gender: formData.value.gender,
+          birthDate: formData.value.birthDate,
+          parentName: formData.value.parentName,
+          parentID: formData.value.parentID,
+          parentPhone: formData.value.parentPhone,
+          parentDescription: formData.value.parentDescription,
+          socialWorkerName: formData.value.socialWorkerName,
+          socialWorkerUnit: formData.value.socialWorkerUnit,
+          socialWorkerPhone: formData.value.socialWorkerPhone,
+          timestamp: new Date().toISOString(),
+          caseTask: formData.value.caseTask,
+        };
+
         try {
-          console.log("Submitting formData:", formData.value); // 確認傳遞的資料
-          const response = await axios.post(
-            "https://doctor-1-kpce.onrender.com/history",
-            {
-              id: formData.value.id || generateUUID(),
-              caseNumber: formData.value.caseNumber,
-              reportDate: formData.value.reportDate,
-              reportDoctor: formData.value.reportDoctor,
-              hospital: formData.value.hospital,
-              startDate: formData.value.startDate,
-              endDate: formData.value.endDate,
-              childName: formData.value.childName,
-              childID: formData.value.childID,
-              noID: formData.value.noID,
-              gender: formData.value.gender,
-              city: formData.value.city,
-              birthDate: formData.value.birthDate,
-              phone: formData.value.phone,
-              address: formData.value.address,
-              fatherName: formData.value.fatherName,
-              fatherID: formData.value.fatherID,
-              fatherDescription: formData.value.fatherDescription,
-              motherName: formData.value.motherName,
-              motherID: formData.value.motherID,
-              motherDescription: formData.value.motherDescription,
-              nationality: formData.value.nationality,
-              nationalityDescription: formData.value.nationalityDescription,
-              healthDescription: formData.value.healthDescription,
-              caseSource: formData.value.caseSource,
-              caseSourceDescription: formData.value.caseSourceDescription,
-              task: taskTitle.value,
-              category: category.value,
-              timestamp: new Date().toISOString(),
-            }
-          );
+          // 假設 ReadAPI 是一個處理 POST 請求的函數
+          const response = await ReadAPI("/history", "POST", formDataToSend);
           if (response.status === 201) {
             alert("表單提交成功！");
-            navigateTo("/dashboard");
           } else {
-            console.error("Unexpected response:", response);
-            alert("表單提交失敗，後端未返回預期結果！");
+            console.error("提交錯誤:", response);
+            alert("表單提交失敗！");
           }
         } catch (error) {
-          console.error(
-            "Form submission failed:",
-            error.response?.data || error.message
-          );
+          console.error("提交失敗:", error);
           alert("表單提交失敗，請稍後再試！");
         }
       };
 
-      onMounted(fetchHistoryRecords);
-
       return {
-        category,
-        taskTitle,
         formData,
-        historyRecords,
-        hospitalOptions,
-        cityOptions,
-        formatTimestamp,
         handleFormSubmission,
+        taskOptions,
       };
     },
   };
@@ -356,8 +229,7 @@
     color: #333;
   }
 
-  .form-section,
-  .history-section {
+  .form-section {
     margin-bottom: 20px;
     padding: 20px;
     border: 1px solid #ddd;

@@ -41,6 +41,7 @@
 
 <script>
   import axios from "axios";
+  import { ReadAPI } from "@/composables/useNavigation";
 
   export default {
     data() {
@@ -58,20 +59,20 @@
           return;
         }
 
-        try {
-          const response = await axios.post(
-            "https://doctor-1-kpce.onrender.com/login",
-            {
-              username: this.username,
-              password: this.password,
-            }
-          );
+        const loginData = {
+          username: this.username,
+          password: this.password,
+        };
 
-          if (response.data.token) {
-            console.log("登入成功", response.data);
+        try {
+          // 等待 ReadAPI 返回的資料，並賦值給 this.categories
+          const response = await ReadAPI("/login", "POST", loginData);
+
+          if (response.token) {
+            console.log("登入成功", response);
             // 儲存 token，供後續 API 調用使用
-            localStorage.setItem("token", response.data.token);
-            this.$router.push("/dashboard");
+            localStorage.setItem("token", response.token);
+            this.$router.push("/cases");
           } else {
             this.errorMessage = "登入失敗，請確認帳號密碼";
           }
@@ -86,10 +87,9 @@
       },
       async fetchAnnouncementList() {
         try {
-          const response = await axios.get(
-            "https://doctor-1-kpce.onrender.com/announcementList"
-          );
-          this.announcementList = response.data;
+          // 等待 ReadAPI 返回的資料，並賦值給 this.categories
+          const response = await ReadAPI("/announcementList", "GET");
+          this.announcementList = response;
         } catch (error) {
           console.error("無法加載數據", error);
           this.errorMessage = "無法加載工作清單，請稍後重試。";

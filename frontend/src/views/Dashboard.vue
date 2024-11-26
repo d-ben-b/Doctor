@@ -24,8 +24,7 @@
 </template>
 
 <script>
-  import axios from "axios";
-  import useNavigation from "@/composables/useNavigation";
+  import { useNavigation, ReadAPI } from "@/composables/useNavigation";
 
   export default {
     setup() {
@@ -47,14 +46,11 @@
     },
     methods: {
       async fetchCategories() {
-        // 模擬從 API 加載數據
         try {
-          const response = await axios.get(
-            "https://doctor-1-kpce.onrender.com/categories"
-          );
-          this.categories = response.data;
+          // 等待 ReadAPI 返回的資料，並賦值給 this.categories
+          this.categories = await ReadAPI("/categories", "GET");
         } catch (error) {
-          console.error("加載分類數據失敗", error);
+          console.error("Error fetching categories:", error);
         }
       },
     },

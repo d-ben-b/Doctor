@@ -32,7 +32,7 @@
 
       // 重置狀態回到初始視圖
       const resetStates = () => {
-        router.push("/dashboard"); // 假設重置後回到 Dashboard
+        router.push("/cases"); // 假設重置後回到 Dashboard
       };
 
       return {
