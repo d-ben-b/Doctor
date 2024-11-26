@@ -90,7 +90,6 @@
         // 根據當前頁數和每頁項目數計算顯示的案件
         const start = (currentPage.value - 1) * itemsPerPage.value;
         const end = start + itemsPerPage.value;
-        console.log(itemsPerPage.value);
         return allCases.value.slice(start, end);
       });
       // 篩選條件
@@ -113,7 +112,6 @@
       const fetchCases = async () => {
         try {
           var filtered = await ReadAPI("/history", "GET");
-          console.log(allCases);
 
           // 篩選條件處理
           if (filters.value.startDate) {
@@ -147,15 +145,29 @@
           console.error("無法加載歷史記錄", error);
           alert("無法加載歷史記錄，請稍後再試！");
         }
-        console.log("篩選前的所有資料:", allCases.value);
-        console.log("篩選後的資料:", filtered);
       };
 
       // 查看、編輯、刪除功能
-      const viewCase = (id) => alert(`查看案件 ID: ${id}`);
-      const editCase = (id) => alert(`編輯案件 ID: ${id}`);
-      const deleteCase = (id) => {
-        allCases.value = allCases.value.filter((item) => item.id !== id);
+      const viewCase = (id) => {
+        navigateTo({ path: `/edit`, query: { id, mode: "view" } });
+      };
+      const editCase = (id) => {
+        navigateTo({ path: `/edit`, query: { id, mode: "edit" } });
+      };
+      const deleteCase = async (id) => {
+        const userConfirmed = confirm("確定要刪除此案件嗎？此操作無法恢復！");
+
+        if (!userConfirmed) {
+          // 如果用戶取消操作，退出函數
+          return;
+        }
+        try {
+          const response = await ReadAPI(`/history/${id}`, "DELETE");
+          console.log("刪除成功:", response);
+          alert("刪除成功！");
+        } catch (error) {
+          console.error("刪除出錯:", error);
+        }
       };
 
       // 分頁控制
@@ -204,27 +216,129 @@
 </script>
 
 <style scoped>
+  .case-management {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+  }
+
   .filters {
     display: flex;
-    gap: 10px;
+    flex-wrap: wrap;
+    gap: 15px;
     margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+  }
+
+  .filters input,
+  .filters select,
+  .filters button {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    flex: 1;
+    min-width: 150px;
+  }
+
+  .filters button {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+  }
+
+  .filters button:hover {
+    background-color: #0056b3;
   }
 
   .case-table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 20px;
   }
 
   .case-table th,
   .case-table td {
     border: 1px solid #ddd;
-    padding: 8px;
+    padding: 10px;
+    text-align: left;
+    font-size: 14px;
+  }
+
+  .case-table th {
+    background-color: #f1f1f1;
+    font-weight: bold;
+  }
+
+  .case-table td {
+    background-color: #fff;
+  }
+
+  .case-table tr:nth-child(even) td {
+    background-color: #f9f9f9;
+  }
+
+  .case-table button {
+    margin: 2px;
+    padding: 5px 10px;
+    font-size: 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .case-table button:nth-child(1) {
+    background-color: #28a745;
+    color: white;
+  }
+
+  .case-table button:nth-child(2) {
+    background-color: #ffc107;
+    color: white;
+  }
+
+  .case-table button:nth-child(3) {
+    background-color: #dc3545;
+    color: white;
+  }
+
+  .case-table button:hover {
+    opacity: 0.9;
   }
 
   .pagination {
     margin-top: 20px;
     display: flex;
     justify-content: center;
-    gap: 10px;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .pagination button {
+    padding: 10px 15px;
+    font-size: 14px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+
+  .pagination span {
+    font-size: 14px;
   }
 </style>

@@ -5,7 +5,6 @@
     <h1>填寫新表單</h1>
 
     <div class="form-section">
-      <h3>填寫新表單</h3>
       <form @submit.prevent="handleFormSubmission">
         <!-- 基本資訊 -->
         <div class="form-section">
@@ -170,32 +169,9 @@
       ]);
 
       const handleFormSubmission = async () => {
-        const formDataToSend = {
-          caseNumber: formData.value.caseNumber,
-          reportDate: formData.value.reportDate,
-          reportName: formData.value.reportName,
-          reportPlace: formData.value.reportPlace,
-          startDate: formData.value.startDate,
-          endDate: formData.value.endDate,
-          childName: formData.value.childName,
-          childID: formData.value.childID,
-          noID: formData.value.noID,
-          gender: formData.value.gender,
-          birthDate: formData.value.birthDate,
-          parentName: formData.value.parentName,
-          parentID: formData.value.parentID,
-          parentPhone: formData.value.parentPhone,
-          parentDescription: formData.value.parentDescription,
-          socialWorkerName: formData.value.socialWorkerName,
-          socialWorkerUnit: formData.value.socialWorkerUnit,
-          socialWorkerPhone: formData.value.socialWorkerPhone,
-          timestamp: new Date().toISOString(),
-          caseTask: formData.value.caseTask,
-        };
-
         try {
           // 假設 ReadAPI 是一個處理 POST 請求的函數
-          const response = await ReadAPI("/history", "POST", formDataToSend);
+          const response = await ReadAPI("/history", "POST", formData.value);
           if (response.status === 201) {
             alert("表單提交成功！");
           } else {

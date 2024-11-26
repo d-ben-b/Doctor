@@ -382,6 +382,79 @@ def add_history_record():
         return jsonify({"message": f"Error: {e}"}), 500
 
 
+@app.route('/history/<string:id>', methods=['PUT'])
+def update_history_record(id):
+    try:
+        # 從請求中獲取 JSON 數據
+        data = request.json
+
+        # 驗證必填欄位
+        required_fields = [
+            "caseNumber", "reportDate", "reportName", "reportPlace",
+            "startDate", "endDate", "childName", "gender", "birthDate",
+            "parentName", "socialWorkerName", "socialWorkerUnit", "socialWorkerPhone"
+        ]
+        for field in required_fields:
+            if field not in data or not data[field]:
+                return jsonify({"message": f"Missing or empty field: {field}"}), 400
+
+        # 連接資料庫
+        connection = sqlite3.connect("app.db")
+        cursor = connection.cursor()
+
+        # 更新指定 ID 的數據
+        cursor.execute('''
+            UPDATE history
+            SET caseNumber = ?, reportDate = ?, reportName = ?, reportPlace = ?,
+                startDate = ?, endDate = ?, childName = ?, childID = ?, noID = ?,
+                gender = ?, birthDate = ?, parentName = ?, parentID = ?, parentPhone = ?,
+                parentDescription = ?, socialWorkerName = ?, socialWorkerUnit = ?,
+                socialWorkerPhone = ?, caseTask = ?, timestamp = ?
+            WHERE id = ?
+        ''', (
+            data["caseNumber"], data["reportDate"], data["reportName"], data["reportPlace"],
+            data["startDate"], data["endDate"], data["childName"], data.get(
+                "childID", ""),
+            int(data.get("noID", 0)
+                ), data["gender"], data["birthDate"], data["parentName"],
+            data.get("parentID", ""), data.get("parentPhone",
+                                               ""), data.get("parentDescription", ""),
+            data["socialWorkerName"], data["socialWorkerUnit"], data["socialWorkerPhone"],
+            data.get("caseTask", ""), datetime.now().isoformat(), id
+        ))
+
+        # 提交更改並關閉連接
+        connection.commit()
+        connection.close()
+
+        # 返回成功響應
+        return jsonify({"message": "Record updated successfully", "id": id}), 200
+
+    except Exception as e:
+        return jsonify({"message": f"Error: {e}"}), 500
+
+
+@app.route('/history/<id>', methods=['DELETE'])
+def delete_history_record(id):
+    try:
+        # 連接資料庫
+        connection = sqlite3.connect("app.db")
+        cursor = connection.cursor()
+
+        # 刪除指定 ID 的數據
+        cursor.execute('DELETE FROM history WHERE id = ?', (id,))
+
+        # 提交更改並關閉連接
+        connection.commit()
+        connection.close()
+
+        # 返回成功響應
+        return jsonify({"message": "Record deleted successfully", "id": id}), 200
+
+    except Exception as e:
+        return jsonify({"message": f"Error: {e}"}), 500
+
+
 
 # 主程式啟動
 if __name__ == '__main__':
