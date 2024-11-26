@@ -341,4 +341,21 @@
   .pagination span {
     font-size: 14px;
   }
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #28a745;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  button:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+  }
 </style>
