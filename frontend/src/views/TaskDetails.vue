@@ -24,8 +24,9 @@
           <label>
             填表人單位：
             <select v-model="formData.reportPlace" required>
-              <option value="1">衛生局</option>
-              <option value="2">社會局</option>
+              <option v-for="unit in Unit" :key="unit" :value="unit">
+                {{ unit }}
+              </option>
             </select>
           </label>
           <label>
@@ -56,8 +57,9 @@
           <label>
             性別:
             <select v-model="formData.gender" required>
-              <option value="1">男</option>
-              <option value="2">女</option>
+              <option v-for="gender in Genders" :key="gender" :value="gender">
+                {{ gender }}
+              </option>
             </select>
           </label>
           <label>
@@ -99,8 +101,9 @@
           <label>
             社工單位:
             <select v-model="formData.socialWorkerUnit" required>
-              <option value="1">衛生局</option>
-              <option value="2">社會局</option>
+              <option v-for="unit in Unit" :key="unit" :value="unit">
+                {{ unit }}
+              </option>
             </select>
           </label>
           <label>
@@ -126,11 +129,13 @@
 
 <script>
   import { ref } from "vue";
-  import { ReadAPI } from "@/composables/useNavigation";
+  import { ReadAPI, useNavigation } from "@/composables/useNavigation";
 
   export default {
     name: "TaskDetails",
     setup() {
+      const { navigateTo } = useNavigation();
+
       const formData = ref({
         caseNumber: "",
         reportDate: "",
@@ -168,16 +173,15 @@
         "社會局處轉介",
       ]);
 
+      const Unit = ref(["衛生局", "社會局"]);
+
+      const Genders = ref(["男", "女"]);
+
       const handleFormSubmission = async () => {
         try {
-          // 假設 ReadAPI 是一個處理 POST 請求的函數
           const response = await ReadAPI("/history", "POST", formData.value);
-          if (response.status === 201) {
-            alert("表單提交成功！");
-          } else {
-            console.error("提交錯誤:", response);
-            alert("表單提交失敗！");
-          }
+          alert("表單提交成功！", response);
+          navigateTo("/cases");
         } catch (error) {
           console.error("提交失敗:", error);
           alert("表單提交失敗，請稍後再試！");
@@ -188,6 +192,8 @@
         formData,
         handleFormSubmission,
         taskOptions,
+        Unit,
+        Genders,
       };
     },
   };

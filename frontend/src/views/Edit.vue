@@ -34,8 +34,9 @@
           <label>
             填表人單位：
             <select v-model="formData.reportPlace" :disabled="isReadOnly">
-              <option value="1">衛生局</option>
-              <option value="2">社會局</option>
+              <option v-for="unit in Unit" :key="unit" :value="unit">
+                {{ unit }}
+              </option>
             </select>
           </label>
           <label>
@@ -81,8 +82,9 @@
           <label>
             性別:
             <select v-model="formData.gender" :disabled="isReadOnly">
-              <option value="1">男</option>
-              <option value="2">女</option>
+              <option v-for="gender in Genders" :key="gender" :value="gender">
+                {{ gender }}
+              </option>
             </select>
           </label>
           <label>
@@ -139,8 +141,9 @@
           <label>
             社工單位:
             <select v-model="formData.socialWorkerUnit" :disabled="isReadOnly">
-              <option value="1">衛生局</option>
-              <option value="2">社會局</option>
+              <option v-for="unit in Unit" :key="unit" :value="unit">
+                {{ unit }}
+              </option>
             </select>
           </label>
           <label>
@@ -221,6 +224,10 @@
         "脆弱家庭",
         "社會局處轉介",
       ]);
+
+      const Unit = ref(["衛生局", "社會局"]);
+
+      const Genders = ref(["男", "女"]);
       const return_to_main = () => {
         navigateTo("/cases");
       };
@@ -270,6 +277,8 @@
         isReadOnly,
         updateRecord,
         return_to_main,
+        Unit,
+        Genders,
       };
     },
   };
