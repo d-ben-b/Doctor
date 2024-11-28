@@ -2,8 +2,8 @@
 import axios from "axios";
 import { useRouter } from "vue-router";
 
-const API_BASE_URL = "https://doctor-1-kpce.onrender.com";
-//const API_BASE_URL = "http://127.0.0.1:5000";
+//const API_BASE_URL = "https://doctor-1-kpce.onrender.com";
+const API_BASE_URL = "http://127.0.0.1:5000";
 
 export function useNavigation() {
   const router = useRouter();

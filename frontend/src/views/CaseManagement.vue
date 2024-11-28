@@ -114,7 +114,7 @@
 
           if (ID === "2") {
             filtered = filtered.filter((item) => item.reportPlace === "衛生局");
-          } else if (auth_token === "3") {
+          } else if (ID === "3") {
             filtered = filtered.filter((item) => item.reportPlace === "社會局");
           } else {
             filtered = filtered;
