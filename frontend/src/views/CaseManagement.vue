@@ -9,7 +9,6 @@
     <!-- 篩選器與搜尋 -->
     <div class="filters">
       <input type="date" v-model="filters.startDate" />
-      <input type="date" v-model="filters.endDate" />
       <select v-model="filters.category">
         <option value="">收案類型</option>
         <option value="衛生局">衛生局</option>
@@ -25,7 +24,6 @@
     <table class="case-table">
       <thead>
         <tr>
-          <!-- TODO：改 -->
           <th>表單狀況</th>
           <th>轉介日期</th>
           <th>幼兒姓名</th>
@@ -68,7 +66,7 @@
     <div class="pagination">
       <button @click="prevPage" :disabled="currentPage === 1">上一頁</button>
       <span>頁數 {{ currentPage }} / {{ totalPages }}</span>
-      <button @click="nextPage" :disabled="currentPage === totalPages">
+      <button @click="nextPage" :disabled="currentPage === totalPages || '0'">
         下一頁
       </button>
     </div>
@@ -95,9 +93,9 @@
       // 篩選條件
       const filters = ref({
         startDate: "",
-        endDate: "",
         category: "",
         keyword: "",
+        reportPlace: "",
       });
 
       // 分頁
@@ -112,7 +110,15 @@
       const fetchCases = async () => {
         try {
           var filtered = await ReadAPI("/history", "GET");
+          const ID = localStorage.getItem("id");
 
+          if (ID === "2") {
+            filtered = filtered.filter((item) => item.reportPlace === "衛生局");
+          } else if (auth_token === "3") {
+            filtered = filtered.filter((item) => item.reportPlace === "社會局");
+          } else {
+            filtered = filtered;
+          }
           // 篩選條件處理
           if (filters.value.startDate) {
             filtered = filtered.filter(
@@ -120,26 +126,21 @@
                 new Date(item.reportDate) >= new Date(filters.value.startDate)
             );
           }
-          if (filters.value.endDate) {
-            filtered = filtered.filter(
-              (item) =>
-                new Date(item.reportDate) <= new Date(filters.value.endDate)
-            );
-          }
           if (filters.value.category) {
             filtered = filtered.filter(
-              (item) => item.category === filters.value.category
+              (item) => item.socialWorkerUnit === filters.value.category
             );
           }
           if (filters.value.keyword) {
-            const keyword = filters.value.keyword.toLowerCase();
+            const keyword = filters.value.keyword;
             filtered = filtered.filter(
               (item) =>
-                item.caseNumber.toLowerCase().includes(keyword) ||
-                item.childName.toLowerCase().includes(keyword) ||
-                item.task.toLowerCase().includes(keyword)
+                item.caseNumber.includes(keyword) ||
+                item.childName.includes(keyword) ||
+                item.caseTask.includes(keyword)
             );
           }
+
           allCases.value = filtered;
         } catch (error) {
           console.error("無法加載歷史記錄", error);
@@ -163,10 +164,10 @@
         }
         try {
           const response = await ReadAPI(`/history/${id}`, "DELETE");
-          console.log("刪除成功:", response);
-          alert("刪除成功！");
+          alert("刪除成功！", response);
         } catch (error) {
           console.error("刪除出錯:", error);
+          alert("刪除失敗，請稍後再試！", error);
         }
       };
 
@@ -357,5 +358,9 @@
   button:hover {
     background-color: #218838;
     transform: scale(1.05);
+  }
+  button:disabled:hover {
+    background-color: #ccc; /* 禁用狀態下仍然保持背景顏色 */
+    transform: scale(1); /* 禁用時不縮放 */
   }
 </style>

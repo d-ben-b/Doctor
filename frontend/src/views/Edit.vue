@@ -173,7 +173,7 @@
 </template>
 <script>
   import { ref, onMounted } from "vue";
-  import { useRoute, useRouter } from "vue-router";
+  import { useRoute } from "vue-router";
   import { ReadAPI, useNavigation } from "@/composables/useNavigation";
 
   export default {
@@ -238,7 +238,17 @@
           const record = response.find((item) => item.id === id.value);
           formData.value = record;
         } catch (error) {
+          alert("無法加載數據，請稍後再試！");
           console.error("無法加載數據:", error);
+        }
+      };
+      const updateRecord = async (id, updatedData) => {
+        try {
+          const response = await ReadAPI(`/history/${id}`, "PUT", updatedData);
+          alert("記錄已更新！", response);
+          return_to_main();
+        } catch (error) {
+          alert("更新出錯！");
         }
       };
 
@@ -248,19 +258,7 @@
           alert("記錄已更新！");
           return_to_main();
         } catch (error) {
-          console.error("更新失敗:", error);
           alert("更新失敗，請稍後再試！");
-        }
-      };
-      const updateRecord = async (id, updatedData) => {
-        try {
-          const response = await ReadAPI(`/history/${id}`, "PUT", updatedData);
-          console.log("更新成功:", response);
-          alert("記錄已更新！");
-          return_to_main();
-        } catch (error) {
-          console.error("更新出錯:", error);
-          alert("更新出錯！");
         }
       };
 

@@ -40,7 +40,6 @@
 </template>
 
 <script>
-  import axios from "axios";
   import { ReadAPI } from "@/composables/useNavigation";
 
   export default {
@@ -72,6 +71,7 @@
             console.log("登入成功", response);
             // 儲存 token，供後續 API 調用使用
             localStorage.setItem("token", response.token);
+            localStorage.setItem("id", response.id);
             this.$router.push("/cases");
           } else {
             this.errorMessage = "登入失敗，請確認帳號密碼";

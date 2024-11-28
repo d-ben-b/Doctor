@@ -170,7 +170,7 @@ def login():
 
         # 登入成功返回 token
         if user:
-            return jsonify({"message": "Login successful", "token": user[3]})
+            return jsonify({"message": "Login successful", "token": user[3],"id":user[0]}), 200
         else:
             return jsonify({"message": "Invalid username or password"}), 401
     except Exception as e:
